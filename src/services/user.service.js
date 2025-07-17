@@ -41,7 +41,7 @@ export const updateMultipleUsersDifferentfields = async (updatePayload) => {
         return {
             updateOne: {
                 filter: { _id },
-                update: { $set: fields }
+                update: { $set: fields },
             }
         };
     });
