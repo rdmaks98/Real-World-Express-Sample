@@ -2,6 +2,12 @@ import { createRoleSchema, updateRoleSchema } from "../validation/role.valdation
 import * as roleService from '../services/role.service.js';
 import ErrorHandler from "../utils/error.handler.js";
 
+// 1. insert role
+// 2. get roleList
+// 3. update role via roleid
+// 4. remove role via roleid
+// 5. single role via roleid
+
 export const createRole = async (req, res, next) => {
     try {
         const { error } = createRoleSchema.validate(req.body);
@@ -71,66 +77,5 @@ export const singleRole = async (req, res, next) => {
     } catch (err) {
         console.log("single role error:", err)
         next(err);
-    }
-};
-export const addAccessModule = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const { modules } = req.body;
-
-        if (!Array.isArray(modules)) {
-            return next(new ErrorHandler("Modules must be an array", 400));
-        }
-
-        const role = await roleService.getSingleRole(id);
-        if (!role) {
-            return next(new ErrorHandler("Role is not Found", 404));
-        }
-
-        const updatedRole = await roleService.updateRole(
-            id,
-            { $addToSet: { accessmodules: { $each: modules } } },
-        );
-
-        if (!updatedRole) return next(new ErrorHandler("Role not found", 404));
-
-        res.status(200).json({
-            success: true,
-            message: "Modules added successfully",
-            data: updatedRole,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-export const removeAccessModule = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const { module } = req.body;
-
-        if (!module) {
-            return next(new ErrorHandler("Module is required", 400));
-        }
-
-        const role = await roleService.getSingleRole(id);
-        if (!role) {
-            return next(new ErrorHandler("Role is not Found", 404));
-        }
-
-        const updatedRole = await roleService.updateRole(
-            id,
-            { $pull: { accessmodules: module } },
-        );
-
-        if (!updatedRole) return next(new ErrorHandler("Role not found", 404));
-
-        res.status(200).json({
-            success: true,
-            message: "Module removed successfully",
-            data: updatedRole,
-        });
-    } catch (error) {
-        next(error);
     }
 };

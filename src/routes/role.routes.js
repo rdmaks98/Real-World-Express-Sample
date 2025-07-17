@@ -5,18 +5,15 @@ import {
     updateRole,
     deleteRole,
     singleRole,
-    addAccessModule,
-    removeAccessModule
 } from "../controllers/role.controller.js";
+import { authentication } from "../middleware/authentication.middleware.js";
 
 const roleRoute = express.Router();
 
 roleRoute.post("/", createRole);
 roleRoute.get("/", getRoles);
-roleRoute.put("/:id", updateRole);
-roleRoute.get("/:id", singleRole);
-roleRoute.patch("/add-access/:id", addAccessModule);
-roleRoute.patch("/remove-access/:id", removeAccessModule);
-roleRoute.delete("/:id", deleteRole);
+roleRoute.put("/:id", authentication, updateRole);
+roleRoute.get("/:id", authentication, singleRole);
+roleRoute.delete("/:id", authentication, deleteRole);
 
 export default roleRoute;

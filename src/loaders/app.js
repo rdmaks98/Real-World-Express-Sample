@@ -4,6 +4,8 @@ import cors from "cors";
 import connectDB from "./db.config.js";
 import errorDetails from "../middleware/error.middleware.js";
 import roleRoute from "../routes/role.routes.js";
+import authRoutes from "../routes/auth.routes.js";
+import userRoutes from "../routes/user.routes.js";
 
 const app = express();
 
@@ -27,9 +29,12 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// call all main routes which project required
 app.use("/api/roles", roleRoute);
+app.use("/api/auth", authRoutes)
+app.use("/api/user", userRoutes)
 
-// Global error handler middleware (must come last)
+// Global error handler middleware
 app.use(errorDetails);
 
 // Handle sync error
